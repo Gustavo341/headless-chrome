@@ -4,6 +4,7 @@ const puppeteer = require('puppeteer');
 const port = process.env.PORT || 8080;
 const validUrl = require('valid-url');
 
+
 var parseUrl = function (url) {
     url = decodeURIComponent(url)
     if (!/^(?:f|ht)tps?\:\/\//.test(url)) {
@@ -32,7 +33,7 @@ app.get('/', function (req, res) {
             });
 
             await page.goto(urlToScreenshot);
-            
+            const iPhone = puppeteer.devices['iPhone 6'];
             await page.emulate(iPhone);
 
             await page.screenshot().then(function (buffer) {
