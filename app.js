@@ -31,9 +31,7 @@ app.get('/', function (req, res) {
                 height: 1080
             });
 
-            await page.goto(urlToScreenshot, {
-                waitUntil: 'networkidle2'
-            });
+            await page.goto(urlToScreenshot);
             
             await page.emulate(iPhone);
 
