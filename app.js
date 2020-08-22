@@ -31,10 +31,12 @@ app.get('/', function (req, res) {
                 height: 1080
             });
 
-            urlToScreenshot
             await page.goto(urlToScreenshot, {
                 waitUntil: 'networkidle2'
             });
+            
+            await page.emulate(iPhone);
+
             await page.screenshot().then(function (buffer) {
                 res.setHeader('Content-Disposition', 'attachment;filename="' + urlToScreenshot + '.png"');
                 res.setHeader('Content-Type', 'image/png');
