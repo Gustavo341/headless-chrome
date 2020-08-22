@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer');
 const port = process.env.PORT || 8080;
 const validUrl = require('valid-url');
 
-var parseUrl = function(url) {
+var parseUrl = function (url) {
     url = decodeURIComponent(url)
     if (!/^(?:f|ht)tps?\:\/\//.test(url)) {
         url = 'http://' + url;
@@ -13,12 +13,12 @@ var parseUrl = function(url) {
     return url;
 };
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
     var urlToScreenshot = parseUrl(req.query.url);
 
     if (validUrl.isWebUri(urlToScreenshot)) {
         console.log('Screenshotting: ' + urlToScreenshot);
-        (async() => {
+        (async () => {
             const browser = await puppeteer.launch({
                 args: ['--no-sandbox', '--disable-setuid-sandbox']
             });
@@ -30,10 +30,12 @@ app.get('/', function(req, res) {
                 width: 1920,
                 height: 1080
             });
-            
 
-            await page.goto(urlToScreenshot);
-            await page.screenshot().then(function(buffer) {
+            urlToScreenshot
+            await page.goto(urlToScreenshot, {
+                waitUntil: 'networkidle2'
+            });
+            await page.screenshot().then(function (buffer) {
                 res.setHeader('Content-Disposition', 'attachment;filename="' + urlToScreenshot + '.png"');
                 res.setHeader('Content-Type', 'image/png');
                 res.send(buffer)
@@ -47,6 +49,6 @@ app.get('/', function(req, res) {
 
 });
 
-app.listen(port, function() {
+app.listen(port, function () {
     console.log('App listening on port ' + port)
 })
